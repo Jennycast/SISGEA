@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.taller.sisgea.procesos.mapper.IPlanMapper">
+
+	<sql id="consultaVistaMant">
+        SELECT *
+        FROM VIE_MAN_PLAN_ACADEMICO
+    </sql>
+    
+    <sql id="orden">
+    	ORDER BY ID_PLAN
+    </sql>
+	
+    <select id="buscarTodos" resultType="Plan" statementType="PREPARED">
+        <include refid="consultaVistaMant"/>
+        <include refid="orden"/>
+    </select>
+    
+    <select id="buscarPlan" resultType="Plan">
+        <include refid="consultaVistaMant"/>
+        WHERE
+                ID_PLAN = #{idPlan}
+    </select>
+    
+    <select id="mantener" parameterType="ParametroMantenimiento" statementType="CALLABLE">
+        {
+            CALL PRC_MANT_MAE_PLAN(
+                #{modo, 							jdbcType=VARCHAR, mode=IN},
+                #{objetoMantenido.idPlan,			jdbcType=VARCHAR, mode=IN},
+                #{objetoMantenido.facultad,			jdbcType=VARCHAR, mode=IN},
+                #{objetoMantenido.escuela,			jdbcType=VARCHAR, mode=IN},
+                #{objetoMantenido.especialidad,		jdbcType=VARCHAR, mode=IN},
+                #{objetoMantenido.descripcionPlan,	jdbcType=VARCHAR, mode=IN}
+            )
+        }
+    </select>
+
+</mapper>

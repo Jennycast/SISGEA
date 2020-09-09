@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.taller.sisgea.procesos.mapper.IProgramacionMapper">
+
+	<sql id="consultaVistaMant">
+        SELECT *
+        FROM VIE_MAN_PROGRAMACION_ACADEMICA
+    </sql>
+    
+    <sql id="orden">
+    	ORDER BY ID_CURSO, SECCION
+    </sql>
+	
+    <select id="buscarTodos" resultType="Programacion" statementType="PREPARED">
+        <include refid="consultaVistaMant"/>
+        <include refid="orden"/>
+    </select>
+    
+    <select id="buscarProgramacion" resultType="Programacion">
+        <include refid="consultaVistaMant"/>
+        WHERE
+                ID_CURSO = #{idCurso}
+        	AND SECCION = #{seccion}
+    </select>
+	
+	<select id="mantener" parameterType="ParametroMantenimiento" statementType="CALLABLE">
+        {
+            CALL PRC_MANT_MAE_PROGRAMACION(
+                #{modo, 						jdbcType=VARCHAR, mode=IN},
+                #{objetoMantenido.seccion,		jdbcType=INTEGER, mode=IN},
+                #{objetoMantenido.idCurso,		jdbcType=VARCHAR, mode=IN},
+                #{objetoMantenido.idDocente,	jdbcType=VARCHAR, mode=IN},
+                #{objetoMantenido.tope,			jdbcType=NUMERIC, mode=IN},
+                #{objetoMantenido.matriculados,	jdbcType=NUMERIC, mode=IN},
+                #{objetoMantenido.turno,		jdbcType=VARCHAR, mode=IN},
+                #{objetoMantenido.aula,			jdbcType=VARCHAR, mode=IN}
+            )
+        }
+    </select>
+    
+</mapper>

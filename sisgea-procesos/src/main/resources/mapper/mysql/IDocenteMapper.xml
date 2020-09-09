@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.taller.sisgea.procesos.mapper.IDocenteMapper">
+
+	<sql id="consultaVistaMant">
+        SELECT *
+        FROM VIE_MAN_DOCENTE
+    </sql>
+    
+    <sql id="orden">
+    	ORDER BY ID_DOCENTE
+    </sql>
+	
+    <select id="buscarTodos" resultType="Docente" statementType="PREPARED">
+        <include refid="consultaVistaMant"/>
+        <include refid="orden"/>
+    </select>
+    
+    <select id="buscarDocente" resultType="Docente">
+        <include refid="consultaVistaMant"/>
+        WHERE
+                ID_DOCENTE = #{idDocente}
+    </select>
+    
+    <select id="mantener" parameterType="ParametroMantenimiento" statementType="CALLABLE">
+        {
+            CALL PRC_MANT_MAE_DOCENTE(
+                #{modo, 						jdbcType=VARCHAR, mode=IN},
+                #{objetoMantenido.idDocente,	jdbcType=VARCHAR, mode=IN},
+                #{objetoMantenido.nombres,		jdbcType=VARCHAR, mode=IN},
+                #{objetoMantenido.apellidos,	jdbcType=VARCHAR, mode=IN},
+                #{objetoMantenido.tipo,			jdbcType=VARCHAR, mode=IN}
+            )
+        }
+    </select>
+
+</mapper>

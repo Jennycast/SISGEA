@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.taller.sisgea.consultasgenerales.mapper.IEstadoEspaciosAcademicosMapper">
+	
+	<select id="buscarPorCriterio" parameterType="CriterioBusquedaEstadoEspacioAcademico"  resultType="EstadoEspacioAcademico" statementType="PREPARED">	
+		SELECT * 
+		FROM VIE_CON_ESTADO_ESPACIOS_ACADEMICOS
+		<where>
+			<if  test="idsEspacioAcademico !=null and idsEspacioAcademico.size()>0">
+				AND ID_ESPACIO_ACADEMICO IN 
+				<foreach item="item" index="index" collection="idsEspacioAcademico" open ="(" separator="," close=")">
+					#{item}
+				</foreach> 
+			</if>
+			<if  test="fecha != null">
+				AND (dia = CONCAT(ELT(WEEKDAY(#{fecha}) + 1, 'LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SÁBADO', 'DOMINGO')) OR DIA IS NULL)
+			</if>
+		</where>
+		ORDER BY ID_ESPACIO_ACADEMICO ASC, HORARIO ASC
+   	</select>
+   	
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.taller.sisgea.procesos.mapper.IAsignacionManualEspacioAcademicoMapper">
+
+	<sql id="consultaVistaMant">
+        SELECT  *
+        FROM VIE_CON_ASIGNACION_ESPACIO_ACADEMICO
+    </sql>
+    
+    <sql id="orden">
+    	ORDER BY CICLO, CURSO, SECCION
+    </sql>
+	
+    <select id="buscarTodos" resultType="AsignacionManualEspacioAcademico" statementType="PREPARED">
+        <include refid="consultaVistaMant"/>
+        <include refid="orden"/>
+    </select>
+    
+    <select id="buscarAsignacionManualEspacioAcademico" resultType="AsignacionManualEspacioAcademico">
+        <include refid="consultaVistaMant"/>
+        WHERE
+                ID_ASIGNACION = #{idEspacioAcademico}
+    </select>
+    
+    <select id="mantener" parameterType="ParametroMantenimiento" statementType="CALLABLE">
+        {
+            CALL PRC_ASIGNACION_MANUAL_ESPACIO_ACADEMICO(
+                #{modo, 							 	jdbcType=VARCHAR, mode=IN},
+                #{objetoMantenido.idAsignacion, 	 	jdbcType=INTEGER, mode=IN},
+                #{objetoMantenido.idEspacioAcademico,	jdbcType=NUMERIC, mode=IN},
+                #{objetoMantenido.idCurso,				jdbcType=VARCHAR, mode=IN},
+                #{objetoMantenido.seccion, 	      		jdbcType=NUMERIC, mode=IN},
+                #{objetoMantenido.idHorario, 	   		jdbcType=NUMERIC, mode=IN},
+                #{objetoMantenido.idHorarioDetalle, 	jdbcType=NUMERIC, mode=IN},
+                #{objetoMantenido.horarioInicio,		jdbcType=VARCHAR, mode=IN},
+                #{objetoMantenido.horarioFin,			jdbcType=VARCHAR, mode=IN}
+            )
+        }
+    </select>
+	
+</mapper>
